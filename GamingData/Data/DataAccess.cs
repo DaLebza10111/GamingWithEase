@@ -14,7 +14,7 @@ namespace GamingData.Data
             _config = configuration;
         }
 
-        public async Task<IEnumerable<T>> GetDataAsync<T, P>(string query, P parameters, string connectionId = "TransactionsDB")
+        public async Task<IEnumerable<T>> GetDataListAsync<T, P>(string query, P parameters, string connectionId = "TransactionsDB")
         {
             using IDbConnection conn = new SqlConnection(_config.GetConnectionString(connectionId));
 
