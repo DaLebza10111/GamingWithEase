@@ -1,3 +1,5 @@
+using GamingData.Data;
+
 namespace TransactionsAPI
 {
     public class Program
@@ -12,6 +14,7 @@ namespace TransactionsAPI
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddTransient<IDataAccess, DataAccess>();
 
             var app = builder.Build();
 

@@ -5,7 +5,7 @@ using System.Data;
 
 namespace GamingData.Data
 {
-    public class DataAccess
+    public class DataAccess : IDataAccess
     {
         private readonly IConfiguration _config;
 
