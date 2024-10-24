@@ -19,7 +19,7 @@ namespace GamingData.Repository
         }
         public async Task<IEnumerable<Client>> GetAllClientsAsync()
         {
-            var query = "SELECT * FROM tbl.Client";
+            var query = "SELECT * FROM [internal].[Client]";
 
             using (var connection = CreateConnection())
             {
@@ -29,7 +29,7 @@ namespace GamingData.Repository
 
         public async Task<Client> GetClientByIdAsync(int id)
         {
-            var query = "SELECT * FROM tbl.Client WHERE ClientID = @ClientID";
+            var query = "SELECT * FROM [internal].[Client] WHERE ClientID = @ClientID";
 
             using (var connection = CreateConnection())
             {

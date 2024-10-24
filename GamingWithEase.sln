@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TransactionsAPI", "Transact
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GamingData", "GamingData\GamingData.csproj", "{3329C807-9CBF-4978-BBF9-C1842C779990}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientApp", "ClientApp\ClientApp.csproj", "{CB41BB3B-E0A3-408A-9550-7A8AF5DD084B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{3329C807-9CBF-4978-BBF9-C1842C779990}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3329C807-9CBF-4978-BBF9-C1842C779990}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3329C807-9CBF-4978-BBF9-C1842C779990}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CB41BB3B-E0A3-408A-9550-7A8AF5DD084B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CB41BB3B-E0A3-408A-9550-7A8AF5DD084B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CB41BB3B-E0A3-408A-9550-7A8AF5DD084B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CB41BB3B-E0A3-408A-9550-7A8AF5DD084B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
