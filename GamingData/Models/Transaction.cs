@@ -8,8 +8,6 @@ namespace GamingData.Models
         public int TransactionTypeID { get; set; }
         public int ClientID { get; set; }
         public string? Comment { get; set; }
-        public Client Client { get; set; }
-        public TransactionType TransactionType { get; set; }
     }
 
 }
