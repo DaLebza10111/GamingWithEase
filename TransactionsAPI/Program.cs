@@ -15,8 +15,9 @@ namespace TransactionsAPI
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            builder.Services.AddTransient<IDataAccess, DataAccess>();
-            builder.Services.AddTransient<IClientRepository, ClientRepository>();
+            builder.Services.AddScoped<IClientRepository, ClientRepository>();
+            builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
+            builder.Services.AddScoped<ITransactionTypeRepository, TransactionTypeRepository>();
 
             var app = builder.Build();
 
