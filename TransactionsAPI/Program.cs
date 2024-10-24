@@ -1,4 +1,5 @@
 using GamingData.Data;
+using GamingData.Repository;
 
 namespace TransactionsAPI
 {
@@ -15,6 +16,7 @@ namespace TransactionsAPI
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddTransient<IDataAccess, DataAccess>();
+            builder.Services.AddTransient<IClientRepository, ClientRepository>();
 
             var app = builder.Build();
 

@@ -1,32 +1,76 @@
-﻿using GamingData.Models;
+﻿using GamingData.Data;
+using GamingData.Models;
+using System.Net.Http.Headers;
 
 namespace GamingData.Repository
 {
     public class ClientRepository : IClientRepository
     {
-        public Task<bool> AddNewClient(Client client)
+        private readonly IDataAccess _db;
+
+        public ClientRepository(IDataAccess access)
         {
-            throw new NotImplementedException();
+            _db = access;
+        }
+        public async Task<bool> AddNewClient(Client client)
+        {
+            try
+            {
+                string query = "INSERT INTO [internal].[Client](Name, Surname, ClientBalance) VALUES(@ClientName, @ClientSurname, @ClientBalance)";
+                await _db.SaveDataAsync(query, new { Name = client.ClientName, Surname = client.ClientSurname, Balance = client.ClientBalance });
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                //throw ex;
+                return false;
+            }
         }
 
-        public Task<bool> DeleteClient(int ID)
+        public async Task<bool> DeleteClient(int ID)
         {
-            throw new NotImplementedException();
+            try
+            {
+                string query = "DELETE FROM WHERE ClientID=@ID";
+                await _db.SaveDataAsync(query, new { ID = ID });
+                return true;
+            }
+            catch (Exception ex)
+            {
+
+                return false;
+            }
         }
 
-        public Task<Client> GetClientByID(int ID)
+        public async Task<Client> GetClientByID(int ID)
         {
-            throw new NotImplementedException();
+            string query = "SELECT * FROM [internal].[Client] WHERE ClientID =@ID";
+            IEnumerable<Client> ClientList = await _db.GetDataListAsync<Client, dynamic>(query, new { });
+            return ClientList?.FirstOrDefault();
         }
 
-        public Task<IEnumerable<Client>> GetClientList()
+        public async Task<IEnumerable<Client>> GetClientList()
         {
-            throw new NotImplementedException();
+            string query = "SELECT * FROM [internal].[Client]";
+            var ClientList = await _db.GetDataListAsync<Client, dynamic>(query, new { });
+            return ClientList;
         }
 
-        public Task<bool> UpdateClientDetails(Client client)
+        public async Task<bool> UpdateClientDetails(Client client)
         {
-            throw new NotImplementedException();
+            try
+            {
+                string query = "UPDATE [internal].[Client] SET Name=@ClientName, Surname=@ClientSurname, ClientBalance=@ClientBalance";
+                await _db.SaveDataAsync(query, client);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                //throw ex;
+                return false;
+            }
         }
     }
 }

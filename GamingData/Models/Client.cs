@@ -12,4 +12,5 @@ namespace GamingData.Models
         [Required]
         public double ClientBalance { get; set; }
     }
+
 }
