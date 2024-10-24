@@ -16,8 +16,8 @@ namespace TransactionsAPI
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddScoped<IClientRepository, ClientRepository>();
-            builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
-            builder.Services.AddScoped<ITransactionTypeRepository, TransactionTypeRepository>();
+            //builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
+            //builder.Services.AddScoped<ITransactionTypeRepository, TransactionTypeRepository>();
 
             var app = builder.Build();
 
