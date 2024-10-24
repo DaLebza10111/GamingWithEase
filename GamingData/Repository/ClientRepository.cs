@@ -1,75 +1,39 @@
-﻿using GamingData.Data;
+﻿using Dapper;
 using GamingData.Models;
-using System.Net.Http.Headers;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 
 namespace GamingData.Repository
 {
     public class ClientRepository : IClientRepository
     {
-        private readonly IDataAccess _db;
+        private readonly IConfiguration _config;
 
-        public ClientRepository(IDataAccess access)
+        public ClientRepository(IConfiguration config)
         {
-            _db = access;
+            _config = config;
         }
-        public async Task<bool> AddNewClient(Client client)
+        private SqlConnection CreateConnection()
         {
-            try
-            {
-                string query = "INSERT INTO [internal].[Client](Name, Surname, ClientBalance) VALUES(@ClientName, @ClientSurname, @ClientBalance)";
-                await _db.SaveDataAsync(query, new { Name = client.ClientName, Surname = client.ClientSurname, Balance = client.ClientBalance });
+            return new SqlConnection(_config.GetConnectionString("TransactionsDB"));
+        }
+        public async Task<IEnumerable<Client>> GetAllClientsAsync()
+        {
+            var query = "SELECT * FROM tbl.Client";
 
-                return true;
-            }
-            catch (Exception ex)
+            using (var connection = CreateConnection())
             {
-                //throw ex;
-                return false;
+                return await connection.QueryAsync<Client>(query);
             }
         }
 
-        public async Task<bool> DeleteClient(int ID)
+        public async Task<Client> GetClientByIdAsync(int id)
         {
-            try
+            var query = "SELECT * FROM tbl.Client WHERE ClientID = @ClientID";
+
+            using (var connection = CreateConnection())
             {
-                string query = "DELETE FROM WHERE ClientID=@ID";
-                await _db.SaveDataAsync(query, new { ID = ID });
-                return true;
-            }
-            catch (Exception ex)
-            {
-
-                return false;
-            }
-        }
-
-        public async Task<Client> GetClientByID(int ID)
-        {
-            string query = "SELECT * FROM [internal].[Client] WHERE ClientID =@ID";
-            IEnumerable<Client> ClientList = await _db.GetDataListAsync<Client, dynamic>(query, new { });
-            return ClientList?.FirstOrDefault();
-        }
-
-        public async Task<IEnumerable<Client>> GetClientList()
-        {
-            string query = "SELECT * FROM [internal].[Client]";
-            var ClientList = await _db.GetDataListAsync<Client, dynamic>(query, new { });
-            return ClientList;
-        }
-
-        public async Task<bool> UpdateClientDetails(Client client)
-        {
-            try
-            {
-                string query = "UPDATE [internal].[Client] SET Name=@ClientName, Surname=@ClientSurname, ClientBalance=@ClientBalance";
-                await _db.SaveDataAsync(query, client);
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                //throw ex;
-                return false;
+                return await connection.QuerySingleOrDefaultAsync<Client>(query, new { ClientID = id });
             }
         }
     }
