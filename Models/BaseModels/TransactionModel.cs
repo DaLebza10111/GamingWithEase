@@ -1,7 +1,7 @@
 ﻿
-namespace GamingData.Models
+namespace Models.BaseModels
 {
-    public class Transaction
+    public class TransactionModel
     {
         public int TransactionID { get; set; }
         public decimal Amount { get; set; }
@@ -9,5 +9,4 @@ namespace GamingData.Models
         public int ClientID { get; set; }
         public string? Comment { get; set; }
     }
-
 }

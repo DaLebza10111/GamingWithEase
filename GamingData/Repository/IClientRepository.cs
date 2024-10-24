@@ -1,10 +1,10 @@
-﻿using GamingData.Models;
+﻿using Models.BaseModels;
 
 namespace GamingData.Repository
 {
     public interface IClientRepository
     {
-        Task<IEnumerable<Client>> GetAllClientsAsync();
-        Task<Client> GetClientByIdAsync(int id);
+        Task<IEnumerable<ClientModel>> GetAllClientsAsync();
+        Task<ClientModel> GetClientByIdAsync(int id);
     }
 }

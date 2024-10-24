@@ -1,7 +1,7 @@
 ﻿using Dapper;
-using GamingData.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+using Models.BaseModels;
 
 namespace GamingData.Repository
 {
@@ -17,23 +17,23 @@ namespace GamingData.Repository
         {
             return new SqlConnection(_config.GetConnectionString("TransactionsDB"));
         }
-        public async Task<IEnumerable<Client>> GetAllClientsAsync()
+        public async Task<IEnumerable<ClientModel>> GetAllClientsAsync()
         {
             var query = "SELECT * FROM [internal].[Client]";
 
             using (var connection = CreateConnection())
             {
-                return await connection.QueryAsync<Client>(query);
+                return await connection.QueryAsync<ClientModel>(query);
             }
         }
 
-        public async Task<Client> GetClientByIdAsync(int id)
+        public async Task<ClientModel> GetClientByIdAsync(int id)
         {
             var query = "SELECT * FROM [internal].[Client] WHERE ClientID = @ClientID";
 
             using (var connection = CreateConnection())
             {
-                return await connection.QuerySingleOrDefaultAsync<Client>(query, new { ClientID = id });
+                return await connection.QuerySingleOrDefaultAsync<ClientModel>(query, new { ClientID = id });
             }
         }
     }

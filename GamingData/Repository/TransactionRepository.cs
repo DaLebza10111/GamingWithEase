@@ -1,12 +1,7 @@
 ﻿using Dapper;
-using GamingData.Models;
+using Models.BaseModels;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GamingData.Repository
 {
@@ -24,13 +19,13 @@ namespace GamingData.Repository
             return new SqlConnection(_config.GetConnectionString("DefaultConnection"));
         }
 
-        public async Task<IEnumerable<Transaction>> GetTransactionsByClientIdAsync(int clientId)
+        public async Task<IEnumerable<TransactionModel>> GetTransactionsByClientIdAsync(int clientId)
         {
             var query = "SELECT * FROM [internal].[Transactions] WHERE ClientID = @ClientID";
 
             using (var connection = CreateConnection())
             {
-                return await connection.QueryAsync<Transaction>(query, new { ClientID = clientId });
+                return await connection.QueryAsync<TransactionModel>(query, new { ClientID = clientId });
             }
         }
 
@@ -44,7 +39,7 @@ namespace GamingData.Repository
             }
         }
 
-        public async Task AddTransactionAsync(Transaction transaction)
+        public async Task AddTransactionAsync(TransactionModel transaction)
         {
             var query = @"
             INSERT INTO [internal].[Transactions] (Amount, TransactionTypeID, ClientID, Comment)

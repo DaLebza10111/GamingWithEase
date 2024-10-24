@@ -1,6 +1,5 @@
-﻿using GamingData.Models;
+﻿using Models.BaseModels;
 using GamingData.Repository;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace TransactionsAPI.Controllers
@@ -17,14 +16,14 @@ namespace TransactionsAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Client>>> GetClients()
+        public async Task<ActionResult<IEnumerable<ClientModel>>> GetClients()
         {
             var clients = await _client.GetAllClientsAsync();
             return Ok(clients);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Client>> GetClientById(int id)
+        public async Task<ActionResult<ClientModel>> GetClientById(int id)
         {
             var client = await _client.GetClientByIdAsync(id);
             if (client == null)

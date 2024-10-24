@@ -1,4 +1,3 @@
-using GamingData.Data;
 using GamingData.Repository;
 
 namespace TransactionsAPI
