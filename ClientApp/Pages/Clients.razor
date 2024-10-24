@@ -1,8 +1,13 @@
 ﻿@page "/clients"
-@inject HttpClient _client
+@inject HttpClient _httpclient
 
 <h3>Clients</h3>
 
 @code {
-    //private List<>
+    private List<ClientModel> clients;
+
+    protected override async Task OnInitializedAsync()
+    {
+        clients = await _httpclient.GetFromJsonAsync<List<ClientModel>>("api/GetClients");
+    }
 }
