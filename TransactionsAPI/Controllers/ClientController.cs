@@ -15,7 +15,7 @@ namespace TransactionsAPI.Controllers
             _client = clientRepository;
         }
 
-        [HttpGet]
+        [HttpGet("GetClients")]
         public async Task<ActionResult<IEnumerable<ClientModel>>> GetClients()
         {
             var clients = await _client.GetAllClientsAsync();

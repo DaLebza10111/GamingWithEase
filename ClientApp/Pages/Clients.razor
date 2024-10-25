@@ -3,11 +3,46 @@
 
 <h3>Clients</h3>
 
+@if (clients == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Client Name</th>
+                <th>Surname</th>
+                <th>Balance</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var client in clients)
+            {
+                <tr>
+                    <td>@client.Fullname</td>
+                    <td>@client.Surname</td>
+                    <td>@client.ClientBalance</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
 @code {
     private List<ClientModel> clients;
 
     protected override async Task OnInitializedAsync()
     {
-        clients = await _httpclient.GetFromJsonAsync<List<ClientModel>>("api/GetClients");
+        try
+        {
+            clients = await _httpclient.GetFromJsonAsync<List<ClientModel>>("api/GetClients");
+        }
+        catch (Exception ex)
+        {
+            
+            throw ex;
+        }
     }
 }

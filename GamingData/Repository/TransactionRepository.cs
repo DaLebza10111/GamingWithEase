@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace GamingData.Repository
 {
-    public class TransactionRepository
+    public class TransactionRepository : ITransactionRepository
     {
         private readonly IConfiguration _config;
 

@@ -15,8 +15,16 @@ namespace TransactionsAPI
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddScoped<IClientRepository, ClientRepository>();
-            //builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
+            builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
             //builder.Services.AddScoped<ITransactionTypeRepository, TransactionTypeRepository>();
+
+            builder.Services.AddCors(o =>
+            {
+                o.AddPolicy("AllBlazorOrigin", builder =>
+                {
+                    builder.WithOrigins("https://localhost:7077","http://localhost:5153");
+                });
+            });
 
             var app = builder.Build();
 
@@ -29,10 +37,15 @@ namespace TransactionsAPI
 
             app.UseHttpsRedirection();
 
+            app.UseRouting();
+
+            app.UseCors("AllBlazorOrigin");
+
             app.UseAuthorization();
 
-
             app.MapControllers();
+
+            //app.UseStatusCodePagesWithRedirects("/404");
 
             app.Run();
         }
