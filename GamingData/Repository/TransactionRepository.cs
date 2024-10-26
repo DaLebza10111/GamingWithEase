@@ -44,7 +44,7 @@ namespace GamingData.Repository
             var query = @"
             INSERT INTO [internal].[Transactions] (Amount, TransactionTypeID, ClientID, Comment)
             VALUES (@Amount, @TransactionTypeID, @ClientID, @Comment);
-            UPDATE [internal].[Client] SET [ClientBalance]  = [ClientBalance] + @Amount WHERE ClientID = @ClientID;";
+            UPDATE [internal].[Client] SET [ClientBalance]  = [ClientBalance] + @Amount WHERE ClientID = @ClientID;";// this should be a stored proc
 
             using (var connection = CreateConnection())
             {
@@ -56,7 +56,7 @@ namespace GamingData.Repository
         {
             var balanceQuery = isCredit
                 ? "UPDATE [internal].[Client] SET Balance = Balance + @Amount WHERE ClientID = @ClientID"
-                : "UPDATE [internal].[Client] SET Balance = Balance - @Amount WHERE ClientID = @ClientID";
+                : "UPDATE [internal].[Client] SET Balance = Balance - @Amount WHERE ClientID = @ClientID";//Change to a stored proc
 
             using (var connection = CreateConnection())
             {
