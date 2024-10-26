@@ -16,7 +16,7 @@ namespace GamingData.Repository
 
         private SqlConnection CreateConnection()
         {
-            return new SqlConnection(_config.GetConnectionString("DefaultConnection"));
+            return new SqlConnection(_config.GetConnectionString("TransactionsDB"));
         }
 
         public async Task<IEnumerable<TransactionModel>> GetTransactionsByClientIdAsync(int clientId)
@@ -44,8 +44,7 @@ namespace GamingData.Repository
             var query = @"
             INSERT INTO [internal].[Transactions] (Amount, TransactionTypeID, ClientID, Comment)
             VALUES (@Amount, @TransactionTypeID, @ClientID, @Comment);
-            UPDATE [internal].[Client] SET Balance = Balance + @Amount WHERE ClientID = @ClientID;
-        ";
+            UPDATE [internal].[Client] SET [ClientBalance]  = [ClientBalance] + @Amount WHERE ClientID = @ClientID;";
 
             using (var connection = CreateConnection())
             {

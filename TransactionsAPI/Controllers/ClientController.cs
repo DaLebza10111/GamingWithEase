@@ -23,14 +23,15 @@ namespace TransactionsAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<ClientModel>> GetClientById(int id)
+        public async Task<Result<ClientModel>> GetClientById(int id)
         {
             var client = await _client.GetClientByIdAsync(id);
-            if (client == null)
-            {
-                return NotFound();
-            }
-            return Ok(client);
+            //if (client == null)
+            //{
+            //    string[] msg[0] = "Client not found";
+            //    return Result<ClientModel>.Failure(msg);
+            //}
+            return Result<ClientModel>.Success(client);
         }
     }
 }

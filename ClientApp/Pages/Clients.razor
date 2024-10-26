@@ -2,7 +2,7 @@
 @using ClientApp.Services
 @inject BackEndHttpClient _httpclient
 
-<h3>Clients</h3>
+@* <h3>Clients</h3>
 
 @if (clients == null)
 {
@@ -29,10 +29,53 @@ else
             }
         </tbody>
     </table>
+} *@
+
+
+<h3>Clients</h3>
+
+<!-- Dropdown for selecting clients -->
+<select @onchange="OnClientSelected">
+    <option value="0">-- Select Client --</option>
+    @foreach (var client in clients)
+    {
+        <option value="@client.ClientID">@client.Fullname @client.Surname</option>
+    }
+</select>
+
+<!-- Show client balance -->
+@if (selectedClient != null)
+{
+    <h4>Balance: @selectedClient.ClientBalance</h4>
 }
+
+<h3>Transactions for @selectedClient?.Fullname @selectedClient?.Surname</h3>
+
+<!-- Display transactions for the selected client -->
+@if (transactions != null)
+{
+    <ul>
+        @foreach (var transaction in transactions)
+        {
+            <li>
+                Amount: @transaction.Amount - Type: @transaction.TransactionTypeID
+                <input type="text" @bind="transaction.Comment" placeholder="Add comment..." />
+                @* <button @onclick="() => UpdateComment(transaction.TransactionID, transaction.Comment)">Update Comment</button> *@
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p><em>No transactions available</em></p>
+}
+
+@* <button @onclick="AddTransaction">Add Transaction</button> *@
 
 @code {
     private List<ClientModel> clients;
+    private ClientModel selectedClient;
+    private List<TransactionModel> transactions;
 
     protected override async Task OnInitializedAsync()
     {
@@ -54,6 +97,22 @@ else
         {
             
             throw ex;
+        }
+    }
+
+    private async Task OnClientSelected(ChangeEventArgs e)
+    {
+        int clientId = Convert.ToInt32(e.Value);
+        if (clientId > 0)
+        {
+            selectedClient = clients.FirstOrDefault(c => c.ClientID == clientId);
+            var result = await _httpclient.GetDataAsync<List<TransactionModel>>($"api/Transaction/client/{clientId}");
+
+            if (result.Succeeded)
+            {
+                transactions = result.Data;
+            }
+            // await UpdateClientBalance();
         }
     }
 }

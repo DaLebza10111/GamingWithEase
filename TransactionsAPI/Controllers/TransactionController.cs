@@ -26,7 +26,7 @@ namespace TransactionsAPI.Controllers
         public async Task<IActionResult> UpdateTransactionComment(int transactionId, [FromBody] string comment)
         {
             await _transactionRepository.UpdateTransactionCommentAsync(transactionId, comment);
-            return NoContent();
+            return Ok("Update Succesfully!");
         }
 
         [HttpPost]

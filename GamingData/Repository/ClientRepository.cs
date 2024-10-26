@@ -29,7 +29,7 @@ namespace GamingData.Repository
 
         public async Task<ClientModel> GetClientByIdAsync(int id)
         {
-            var query = "SELECT * FROM [internal].[Client] WHERE ClientID = @ClientID";
+            var query = "SELECT [ClientID],[Name] AS Fullname,[Surname],[ClientBalance] FROM [internal].[Client] WHERE ClientID = @ClientID";
 
             using (var connection = CreateConnection())
             {
