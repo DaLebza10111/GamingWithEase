@@ -1,6 +1,8 @@
 using ClientApp;
+using ClientApp.Services;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ClientApp
 {
@@ -12,7 +14,12 @@ namespace ClientApp
             builder.RootComponents.Add<App>("#app");
             builder.RootComponents.Add<HeadOutlet>("head::after");
 
-            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7257/") });
+            //builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7257/") });
+
+            builder.Services.AddHttpClient<BackEndHttpClient>(client =>
+            {
+                client.BaseAddress = new Uri("https://localhost:7257/");
+            });
 
             await builder.Build().RunAsync();
         }

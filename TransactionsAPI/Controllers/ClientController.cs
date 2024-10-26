@@ -16,10 +16,10 @@ namespace TransactionsAPI.Controllers
         }
 
         [HttpGet("GetClients")]
-        public async Task<ActionResult<IEnumerable<ClientModel>>> GetClients()
+        public async Task<Result<IEnumerable<ClientModel>>> GetClients()
         {
             var clients = await _client.GetAllClientsAsync();
-            return Ok(clients);
+            return Result<IEnumerable<ClientModel>>.Success(clients);
         }
 
         [HttpGet("{id}")]

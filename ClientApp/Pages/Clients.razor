@@ -1,5 +1,6 @@
 ﻿@page "/clients"
-@inject HttpClient _httpclient
+@using ClientApp.Services
+@inject BackEndHttpClient _httpclient
 
 <h3>Clients</h3>
 
@@ -37,7 +38,17 @@ else
     {
         try
         {
-            clients = await _httpclient.GetFromJsonAsync<List<ClientModel>>("api/GetClients");
+            var result = await _httpclient.GetDataAsync<List<ClientModel>>("api/Client/GetClients");
+
+
+            if (result.Succeeded)
+            {
+                clients = result.Data;
+            }
+            else
+            {
+                //show error
+            }
         }
         catch (Exception ex)
         {
