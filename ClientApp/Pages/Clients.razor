@@ -39,9 +39,17 @@ else
                       OnClientChange="LoadClientTransactions" OnClose="CloseModal" OnSave="SaveTransactions" />
 }
 
+@if (showAddClientModal)
+{
+    <AddClientModal ShowModal="showAddClientModal" OnClose="CloseAddClientModal" OnClientAdded="AddNewClient" />
+}
+
+<button class="btn btn-primary" @onclick="ShowAddClientModal">Add New Client</button>
+
 @code {
     private List<ClientModel> clients { get; set; } = new List<ClientModel>();
     private ClientModel selectedClient;
+    private bool showAddClientModal = false;
     private List<TransactionModel> transactions;
     private bool showModal = false;
     private bool isLoading = true;
@@ -53,7 +61,7 @@ else
 
     private async Task LoadClientsAsync()
     {
-        
+
         await Task.Delay(2000);
 
         var result = await _httpclient.GetDataAsync<List<ClientModel>>("api/Client/GetClients");
@@ -105,5 +113,31 @@ else
         showModal = false;
         selectedClient = null;
         transactions = null;
+    }
+
+    private void ShowAddClientModal()
+    {
+        showAddClientModal = true;
+    }
+
+    private void CloseAddClientModal()
+    {
+        showAddClientModal = false;
+    }
+
+    private async Task AddNewClient(ClientModel newClient)
+    {
+        var result = await _httpclient.PostDataAsync("api/Client/AddClient", newClient);
+
+        if (result.Succeeded)
+        {
+            clients.Add(newClient);
+        }
+        else
+        {
+            //
+        }
+
+        CloseAddClientModal();
     }
 }

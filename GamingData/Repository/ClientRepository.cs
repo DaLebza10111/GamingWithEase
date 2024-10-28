@@ -36,5 +36,15 @@ namespace GamingData.Repository
                 return await connection.QuerySingleOrDefaultAsync<ClientModel>(query, new { ClientID = id });
             }
         }
+
+        public async Task<ClientModel> AddClientAsync(ClientModel client)
+        {
+            var query = "INSERT INTO [Client]([Name] AS Fullname,[Surname],[ClientBalance]) VALUES(@Fullname, @Surname, @ClientBalance)";
+
+            using (var connection = CreateConnection())
+            {
+                return await connection.QuerySingleOrDefaultAsync<ClientModel>(query);
+            }
+        }
     }
 }

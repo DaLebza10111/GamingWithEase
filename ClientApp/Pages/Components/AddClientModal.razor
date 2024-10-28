@@ -1,0 +1,53 @@
+﻿@if (ShowModal)
+{
+    <div class="modal fade show d-block" tabindex="-1" role="dialog" style="display: block;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Client</h5>
+                    <button type="button" class="btn-close" @onclick="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="fullName" class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="fullName" @bind="newClient.Fullname" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="surname" class="form-label">Surname</label>
+                            <input type="text" class="form-control" id="surname" @bind="newClient.Surname" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="balance" class="form-label">Balance</label>
+                            <input type="number" class="form-control" id="balance" @bind="newClient.ClientBalance" required />
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="Close">Cancel</button>
+                    <button type="button" class="btn btn-primary" @onclick="AddClient">Add Client</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public bool ShowModal { get; set; }
+    [Parameter] public EventCallback<bool> OnClose { get; set; }
+    [Parameter] public EventCallback<ClientModel> OnClientAdded { get; set; }
+
+    private ClientModel newClient = new ClientModel();
+
+    private async Task AddClient()
+    {
+        await OnClientAdded.InvokeAsync(newClient);
+        await Close();
+    }
+
+    private async Task Close()
+    {
+        newClient = new ClientModel();
+        await OnClose.InvokeAsync(true);
+    }
+}
