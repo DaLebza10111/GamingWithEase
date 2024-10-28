@@ -2,6 +2,7 @@
 using Models.BaseModels;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+using System.Data;
 
 namespace GamingData.Repository
 {
@@ -21,47 +22,58 @@ namespace GamingData.Repository
 
         public async Task<IEnumerable<TransactionModel>> GetTransactionsByClientIdAsync(int clientId)
         {
-            var query = "SELECT * FROM [internal].[Transactions] WHERE ClientID = @ClientID";
-
             using (var connection = CreateConnection())
             {
-                return await connection.QueryAsync<TransactionModel>(query, new { ClientID = clientId });
+                return await connection.QueryAsync<TransactionModel>(
+                    "GetTransactionsByClientId",
+                    new { ClientID = clientId },
+                    commandType: CommandType.StoredProcedure);
             }
         }
 
         public async Task UpdateTransactionCommentAsync(int transactionId, string comment)
         {
-            var query = "UPDATE [internal].[Transactions] SET Comment = @Comment WHERE TransactionID = @TransactionID";
-
             using (var connection = CreateConnection())
             {
-                await connection.ExecuteAsync(query, new { Comment = comment, TransactionID = transactionId });
+                await connection.ExecuteAsync(
+                    "UpdateTransactionComment",
+                    new { TransactionID = transactionId, Comment = comment },
+                    commandType: CommandType.StoredProcedure);
             }
         }
 
         public async Task AddTransactionAsync(TransactionModel transaction)
         {
-            var query = @"
-            INSERT INTO [internal].[Transactions] (Amount, TransactionTypeID, ClientID, Comment)
-            VALUES (@Amount, @TransactionTypeID, @ClientID, @Comment);
-            UPDATE [internal].[Client] SET [ClientBalance]  = [ClientBalance] + @Amount WHERE ClientID = @ClientID;";// this should be a stored proc
-
             using (var connection = CreateConnection())
             {
-                await connection.ExecuteAsync(query, transaction);
+                await connection.ExecuteAsync(
+                    "AddTransaction",
+                    new
+                    {
+                        Amount = transaction.Amount,
+                        TransactionTypeID = transaction.TransactionTypeID,
+                        ClientID = transaction.ClientID,
+                        Comment = transaction.Comment
+                    },
+                    commandType: CommandType.StoredProcedure);
             }
         }
 
         public async Task UpdateClientBalanceAsync(int clientId, decimal amount, bool isCredit)
         {
-            var balanceQuery = isCredit
-                ? "UPDATE [internal].[Client] SET Balance = Balance + @Amount WHERE ClientID = @ClientID"
-                : "UPDATE [internal].[Client] SET Balance = Balance - @Amount WHERE ClientID = @ClientID";//Change to a stored proc
-
             using (var connection = CreateConnection())
             {
-                await connection.ExecuteAsync(balanceQuery, new { Amount = amount, ClientID = clientId });
+                await connection.ExecuteAsync(
+                    "UpdateClientBalance",
+                    new
+                    {
+                        ClientID = clientId,
+                        Amount = amount,
+                        IsCredit = isCredit
+                    },
+                    commandType: CommandType.StoredProcedure);
             }
         }
+
     }
 }
