@@ -104,3 +104,32 @@ BEGIN
 END
 GO
 
+-- SAMPLE DATA
+
+INSERT INTO transactionsType (transactionType_name)
+VALUES 
+    ('Deposit'),
+    ('Withdrawal'),
+    ('Transfer'),
+    ('Payment');
+
+
+INSERT INTO Client (Name, Surname, ClientBalance)
+VALUES 
+    ('John', 'Doe', 1500.00),
+    ('Jane', 'Smith', 2500.00),
+    ('Bob', 'Johnson', 300.50),
+    ('Alice', 'Williams', 780.75),
+    ('Charlie', 'Brown', 1200.00);
+
+
+INSERT INTO Transactions (Amount, TransactionTypeID, ClientID, Comment)
+VALUES 
+    (200.00, 1, 1, 'Winning'),      
+    (50.00, 2, 1, 'Losing'),        
+    (150.00, 3, 2, 'Pending'),      
+    (30.00, 4, 3, 'Winning'),       
+    (500.00, 1, 4, 'Winning'),      
+    (100.00, 2, 5, 'Losing'),       
+    (250.00, 3, 2, 'Pending'),      
+    (700.00, 1, 4, 'Winning');      
