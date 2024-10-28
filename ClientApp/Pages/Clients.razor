@@ -1,33 +1,42 @@
 ﻿@page "/clients"
+@using ClientApp.Pages.Components
 @using ClientApp.Services
 @inject BackEndHttpClient _httpclient
 
-
 <h3>Clients</h3>
 
-<Grid @ref="grid"
-    TItem="ClientModel"
-        Class="table table-hover border-top"
-    Data="clients">
-    <GridColumns>
-        <GridColumn TItem="ClientModel" HeaderText="FullName" PropertyName="FullName">
-            @context.Fullname
-        </GridColumn>
-        <GridColumn TItem="ClientModel" HeaderText="Surname" PropertyName="Surname">
-            @context.Surname
-        </GridColumn>
-        <GridColumn TItem="ClientModel" HeaderText="Balance" PropertyName="ClientBalance">
-            @context.ClientBalance
-        </GridColumn>
-    </GridColumns>
-</Grid>
+<!-- Table to show clients with clickable rows -->
+<table class="table table-hover border-top">
+    <thead>
+        <tr>
+            <th>FullName</th>
+            <th>Surname</th>
+            <th>Balance</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var client in clients)
+        {
+            <tr @onclick="() => OnRowClick(client)">
+                <td>@client.Fullname</td>
+                <td>@client.Surname</td>
+                <td>@client.ClientBalance</td>
+            </tr>
+        }
+    </tbody>
+</table>
 
+<!-- Transaction Modal -->
+@if (showModal && selectedClient != null)
+{
+    <TransactionModal SelectedClient="selectedClient" Transactions="transactions" OnClose="CloseModal" />
+}
 
 @code {
-    Grid<ClientModel> grid = default!;
     private List<ClientModel> clients { get; set; } = new List<ClientModel>();
     private ClientModel selectedClient;
     private List<TransactionModel> transactions;
+    private bool showModal = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -35,21 +44,47 @@
         {
             var result = await _httpclient.GetDataAsync<List<ClientModel>>("api/Client/GetClients");
 
-
             if (result.Succeeded)
             {
                 clients = result.Data;
             }
             else
             {
-                //show error
+                // show error
             }
         }
         catch (Exception ex)
         {
-            
             throw ex;
         }
     }
 
+    // Row click event handler using simpler approach
+    private async Task OnRowClick(ClientModel client)
+    {
+        selectedClient = client;
+
+        // Fetch transactions for the selected client
+        var transactionResult = await _httpclient.GetDataAsync<List<TransactionModel>>($"api/Transaction/client/{selectedClient.ClientID}");
+
+        if (transactionResult.Succeeded)
+        {
+            transactions = transactionResult.Data;
+        }
+        else
+        {
+            transactions = new List<TransactionModel>();
+        }
+
+        // Show modal
+        showModal = true;
+        StateHasChanged();
+    }
+
+    private void CloseModal()
+    {
+        showModal = false;
+        selectedClient = null;
+        transactions = null;
+    }
 }

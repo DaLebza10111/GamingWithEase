@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GamingData", "GamingData\Ga
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientApp", "ClientApp\ClientApp.csproj", "{CB41BB3B-E0A3-408A-9550-7A8AF5DD084B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Models", "Models\Models.csproj", "{3C090345-CDCB-4D13-9A22-001097B61306}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models", "Models\Models.csproj", "{3C090345-CDCB-4D13-9A22-001097B61306}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
