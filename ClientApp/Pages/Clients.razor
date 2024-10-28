@@ -5,29 +5,36 @@
 
 <h3>Clients</h3>
 
-<table class="table table-hover border-top">
-    <thead>
-        <tr>
-            <th>FullName</th>
-            <th>Surname</th>
-            <th>Balance</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var client in clients)
-        {
-            <tr @onclick="() => OnRowClick(client)">
-                <td>@client.Fullname</td>
-                <td>@client.Surname</td>
-                <td>@client.ClientBalance</td>
+@if (isLoading)
+{
+    <LoaderComponent />
+}
+else
+{
+    <table class="table table-hover border-top">
+        <thead>
+            <tr>
+                <th>FullName</th>
+                <th>Surname</th>
+                <th>Balance</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var client in clients)
+            {
+                <tr @onclick="() => OnRowClick(client)">
+                    <td>@client.Fullname</td>
+                    <td>@client.Surname</td>
+                    <td>@client.ClientBalance</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
 
 @if (showModal && selectedClient != null)
 {
-    <TransactionModal Clients="clients" SelectedClient="selectedClient" Transactions="transactions"
+    <TransactionModal Clients="clients" SelectedClient="selectedClient" Transactions="transactions" 
                       OnClientChange="LoadClientTransactions" OnClose="CloseModal" OnSave="SaveTransactions" />
 }
 
@@ -36,26 +43,27 @@
     private ClientModel selectedClient;
     private List<TransactionModel> transactions;
     private bool showModal = false;
+    private bool isLoading = true;
 
     protected override async Task OnInitializedAsync()
     {
-        try
-        {
-            var result = await _httpclient.GetDataAsync<List<ClientModel>>("api/Client/GetClients");
+        await LoadClientsAsync();
+    }
 
-            if (result.Succeeded)
-            {
-                clients = result.Data;
-            }
-            else
-            {
-                // show error
-            }
-        }
-        catch (Exception ex)
+    private async Task LoadClientsAsync()
+    {
+        
+        await Task.Delay(2000);
+
+        var result = await _httpclient.GetDataAsync<List<ClientModel>>("api/Client/GetClients");
+
+        if (result.Succeeded)
         {
-            throw ex;
+            clients = result.Data;
         }
+
+        isLoading = false;
+        StateHasChanged();
     }
 
     private async Task OnRowClick(ClientModel client)
