@@ -16,6 +16,8 @@ namespace ClientApp
 
             //builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7257/") });
 
+            builder.Services.AddBlazorBootstrap();
+
             builder.Services.AddHttpClient<BackEndHttpClient>(client =>
             {
                 client.BaseAddress = new Uri("https://localhost:7257/");

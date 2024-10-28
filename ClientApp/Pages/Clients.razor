@@ -5,75 +5,27 @@
 
 <h3>Clients</h3>
 
-<Button Type="ButtonType.Button" Color="ButtonColor.Primary" @* @onclick="AddEmployee" *@> Add Employee </Button>
-<Button Type="ButtonType.Button" Color="ButtonColor.Primary" @* @onclick="AddEmployee2" *@> Add Employee 2 </Button>
-
-<!-- Dropdown for selecting clients -->
-<select @onchange="OnClientSelected">
-    <option value="0">-- Select Client --</option>
-    @foreach (var client in clients)
-    {
-        <option value="@client.ClientID">@client.Fullname @client.Surname</option>
-    }
-</select>
-
 <Grid @ref="grid"
-      TItem="Employee1"
-      Class="table table-hover table-bordered table-striped mt-3"
-      Data="employees">
-
+    TItem="ClientModel"
+        Class="table table-hover border-top"
+    Data="clients">
     <GridColumns>
-        <GridColumn TItem="Employee1" HeaderText="Id" PropertyName="Id">
-            @context.Id
+        <GridColumn TItem="ClientModel" HeaderText="FullName" PropertyName="FullName">
+            @context.Fullname
         </GridColumn>
-        <GridColumn TItem="Employee1" HeaderText="Employee Name" PropertyName="Name">
-            @context.Name
+        <GridColumn TItem="ClientModel" HeaderText="Surname" PropertyName="Surname">
+            @context.Surname
         </GridColumn>
-        <GridColumn TItem="Employee1" HeaderText="Designation" PropertyName="Designation">
-            @context.Designation
-        </GridColumn>
-        <GridColumn TItem="Employee1" HeaderText="DOJ" PropertyName="DOJ">
-            @context.DOJ
-        </GridColumn>
-        <GridColumn TItem="Employee1" HeaderText="Active" PropertyName="IsActive">
-            @context.IsActive
+        <GridColumn TItem="ClientModel" HeaderText="Balance" PropertyName="ClientBalance">
+            @context.ClientBalance
         </GridColumn>
     </GridColumns>
-
 </Grid>
 
-<!-- Show client balance -->
-@if (selectedClient != null)
-{
-    <h4>Balance: @selectedClient.ClientBalance</h4>
-}
-
-<h3>Transactions for @selectedClient?.Fullname @selectedClient?.Surname</h3>
-
-<!-- Display transactions for the selected client -->
-@if (transactions != null)
-{
-    <ul>
-        @foreach (var transaction in transactions)
-        {
-            <li>
-                Amount: @transaction.Amount - Type: @transaction.TransactionTypeID
-                <input type="text" @bind="transaction.Comment" placeholder="Add comment..." />
-                @* <button @onclick="() => UpdateComment(transaction.TransactionID, transaction.Comment)">Update Comment</button> *@
-            </li>
-        }
-    </ul>
-}
-else
-{
-    <p><em>No transactions available</em></p>
-}
-
-@* <button @onclick="AddTransaction">Add Transaction</button> *@
 
 @code {
     Grid<ClientModel> grid = default!;
-    private List<ClientModel> clients;
+    private List<ClientModel> clients { get; set; } = new List<ClientModel>();
     private ClientModel selectedClient;
     private List<TransactionModel> transactions;
 
@@ -100,19 +52,4 @@ else
         }
     }
 
-    private async Task OnClientSelected(ChangeEventArgs e)
-    {
-        int clientId = Convert.ToInt32(e.Value);
-        if (clientId > 0)
-        {
-            selectedClient = clients.FirstOrDefault(c => c.ClientID == clientId);
-            var result = await _httpclient.GetDataAsync<List<TransactionModel>>($"api/Transaction/client/{clientId}");
-
-            if (result.Succeeded)
-            {
-                transactions = result.Data;
-            }
-            // await UpdateClientBalance();
-        }
-    }
 }
