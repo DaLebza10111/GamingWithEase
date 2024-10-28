@@ -2,7 +2,17 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">@SelectedClient.Fullname's Transactions</h5>
+                <h5 class="modal-title">
+                    Transactions for
+                    <select class="form-select" @onchange="OnClientSelected">
+                        @foreach (var client in Clients)
+                        {
+                            <option value="@client.ClientID" selected="@client.ClientID == SelectedClient.ClientID">
+                                @client.Fullname
+                            </option>
+                        }
+                    </select>
+                </h5>
                 <button type="button" class="btn-close" @onclick="CloseModal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -21,7 +31,9 @@
                             {
                                 <tr>
                                     <td>@transaction.Amount</td>
-                                    <td>@transaction.Comment</td>
+                                    <td>
+                                        <input type="text" class="form-control" @bind="transaction.Comment" />
+                                    </td>
                                 </tr>
                             }
                         </tbody>
@@ -33,6 +45,7 @@
                 }
             </div>
             <div class="modal-footer">
+                <button type="button" class="btn btn-primary" @onclick="SaveChanges">Save</button>
                 <button type="button" class="btn btn-secondary" @onclick="CloseModal">Close</button>
             </div>
         </div>
@@ -40,12 +53,32 @@
 </div>
 
 @code {
+
+    [Parameter] public List<ClientModel> Clients { get; set; }
     [Parameter] public ClientModel SelectedClient { get; set; }
     [Parameter] public List<TransactionModel> Transactions { get; set; }
+    [Parameter] public EventCallback<int> OnClientChange { get; set; }
     [Parameter] public EventCallback OnClose { get; set; }
+    [Parameter] public EventCallback<List<TransactionModel>> OnSave { get; set; }
+
+    private async Task OnClientSelected(ChangeEventArgs e)
+    {
+        int selectedClientId = int.Parse(e.Value.ToString());
+        if (selectedClientId != SelectedClient.ClientID)
+        {
+            SelectedClient = Clients.FirstOrDefault(c => c.ClientID == selectedClientId);
+            await OnClientChange.InvokeAsync(selectedClientId);
+        }
+    }
 
     private void CloseModal()
     {
         OnClose.InvokeAsync(null);
+    }
+
+    private async Task SaveChanges()
+    {
+        await OnSave.InvokeAsync(Transactions);
+        CloseModal();
     }
 }
