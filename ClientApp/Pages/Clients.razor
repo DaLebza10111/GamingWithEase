@@ -2,37 +2,11 @@
 @using ClientApp.Services
 @inject BackEndHttpClient _httpclient
 
-@* <h3>Clients</h3>
-
-@if (clients == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Client Name</th>
-                <th>Surname</th>
-                <th>Balance</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var client in clients)
-            {
-                <tr>
-                    <td>@client.Fullname</td>
-                    <td>@client.Surname</td>
-                    <td>@client.ClientBalance</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-} *@
-
 
 <h3>Clients</h3>
+
+<Button Type="ButtonType.Button" Color="ButtonColor.Primary" @* @onclick="AddEmployee" *@> Add Employee </Button>
+<Button Type="ButtonType.Button" Color="ButtonColor.Primary" @* @onclick="AddEmployee2" *@> Add Employee 2 </Button>
 
 <!-- Dropdown for selecting clients -->
 <select @onchange="OnClientSelected">
@@ -42,6 +16,31 @@ else
         <option value="@client.ClientID">@client.Fullname @client.Surname</option>
     }
 </select>
+
+<Grid @ref="grid"
+      TItem="Employee1"
+      Class="table table-hover table-bordered table-striped mt-3"
+      Data="employees">
+
+    <GridColumns>
+        <GridColumn TItem="Employee1" HeaderText="Id" PropertyName="Id">
+            @context.Id
+        </GridColumn>
+        <GridColumn TItem="Employee1" HeaderText="Employee Name" PropertyName="Name">
+            @context.Name
+        </GridColumn>
+        <GridColumn TItem="Employee1" HeaderText="Designation" PropertyName="Designation">
+            @context.Designation
+        </GridColumn>
+        <GridColumn TItem="Employee1" HeaderText="DOJ" PropertyName="DOJ">
+            @context.DOJ
+        </GridColumn>
+        <GridColumn TItem="Employee1" HeaderText="Active" PropertyName="IsActive">
+            @context.IsActive
+        </GridColumn>
+    </GridColumns>
+
+</Grid>
 
 <!-- Show client balance -->
 @if (selectedClient != null)
@@ -73,6 +72,7 @@ else
 @* <button @onclick="AddTransaction">Add Transaction</button> *@
 
 @code {
+    Grid<ClientModel> grid = default!;
     private List<ClientModel> clients;
     private ClientModel selectedClient;
     private List<TransactionModel> transactions;
