@@ -109,9 +109,8 @@ GO
 INSERT INTO transactionsType (transactionType_name)
 VALUES 
     ('Deposit'),
-    ('Withdrawal'),
-    ('Transfer'),
-    ('Payment');
+    ('Credit'),
+    ('Withdrawal');
 
 
 INSERT INTO Client (Name, Surname, ClientBalance)
